@@ -61,7 +61,7 @@
     "test": "jest"
   },
   "types": "./module.d.ts",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "homepage": "https://github.com/TeamStriked/gtml-msdfgen#readme",
   "directories": {
     "example": "example"

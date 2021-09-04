@@ -38,7 +38,6 @@ Napi::Value generateMSDF(const Napi::CallbackInfo &info)
   float translationX = 4.0;
   float translationY = 4.0;
 
-
   if (info.Length() == 3 && !info[2].IsUndefined())
   {
     if (
@@ -57,20 +56,20 @@ Napi::Value generateMSDF(const Napi::CallbackInfo &info)
     translationY = getFloatProperty(config, "translationY", 4.0);
   }
 
-
   msdfgen::FreetypeHandle *ft = msdfgen::initializeFreetype();
 
   Napi::Buffer<unsigned char> buffer = info[0].As<Napi::Buffer<unsigned char>>();
   Napi::String word = info[1].As<Napi::String>();
 
   msdfgen::FontHandle *font = msdfgen::loadFontData(ft, buffer.Data(),
-                                  buffer.Length());
+                                                    buffer.Length());
   if (font)
   {
     Napi::Object chars = Napi::Object::New(env);
 
     std::string str = info[1].ToString().Utf8Value();
     int charId = 0;
+
     for (char &c : str)
     {
       msdfgen::Shape shape;
@@ -80,11 +79,11 @@ Napi::Value generateMSDF(const Napi::CallbackInfo &info)
       {
         shape.normalize();
         //max. angle
-        msdfgen::edgeColoringSimple(shape, 3.0);
+        msdfgen::edgeColoringSimple(shape, maxAngle);
         //image width, height
-        msdfgen::Bitmap<float, 3> msdf(32, 32);
+        msdfgen::Bitmap<float, 3> msdf(imageWidth, imageHeight);
         //range, scale, translation
-        msdfgen::generateMSDF(msdf, shape, 4.0, 1.0, msdfgen::Vector2(4.0, 4.0));
+        msdfgen::generateMSDF(msdf, shape, range, scale, msdfgen::Vector2(translationX, translationY));
 
         const msdfgen::BitmapConstRef<float, 3> bitmap = msdf;
 
@@ -106,7 +105,11 @@ Napi::Value generateMSDF(const Napi::CallbackInfo &info)
         obj.Set("width", bitmap.width);
         obj.Set("height", bitmap.height);
 
-        chars.Set(c, obj);
+        std::string s(1, c);
+        Napi::String charReal = Napi::String::New(env, s);
+        obj.Set("char", charReal);
+
+        chars.Set((int)c, obj);
 
         charId++;
       }

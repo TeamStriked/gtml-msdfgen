@@ -12,6 +12,7 @@ export interface GlyphData {
   data: Uint8Array;
   width: number;
   height: number;
+  char: string;
 }
 export interface GlyphDictonary {
   [Key: string]: GlyphData;
