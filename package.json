@@ -34,16 +34,13 @@
     "node": ">=10"
   },
   "keywords": [
-    "freetype",
+    "msdf",
+    "msdfgen",
     "font",
-    "webfont",
-    "parse",
-    "sfnt",
     "ttf",
-    "otf",
     "woff",
-    "truetype",
-    "opentype"
+    "text",
+    "render"
   ],
   "license": "MIT",
   "main": "./index.js",
